@@ -6,14 +6,10 @@ if [ $# -ne 1 ]; then
 fi
 
 while read -r file; do
-	cp "${file}" "${file}_"
-	result=$?
-	if [ $result -eq 0 ]; then
-		rm "$file"
-		mv "${file}_" "$file"
-		echo "Fixed $file"
-	else 
-		echo "ERROR: Copying $file failed"
-	fi
-
+	chflags nocompressed "$file"
+ 	if [ $? -eq 0 ]; then
+  		echo "Fixed $file"
+    	else
+     		echo "ERROR: couldn't fix $file"
+       fi
 done < "$1"
